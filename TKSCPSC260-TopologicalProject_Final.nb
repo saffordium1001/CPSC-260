@@ -1,0 +1,788 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     37647,        780]
+NotebookOptionsPosition[     34178,        730]
+NotebookOutlinePosition[     34574,        746]
+CellTagsIndexPosition[     34531,        743]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{"Name", "=", " ", "\"\<Twymun Safford\>\""}], "\[IndentingNewLine]", 
+ RowBox[{"Course", "=", "\"\<CPSC 260\>\""}], "\[IndentingNewLine]", 
+ RowBox[{"Project", " ", "=", " ", 
+  "\"\<Topological Sorting of a Partial Order\>\""}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+  "Summary", " ", "=", " ", 
+   "\"\<For a given list L=[a,b,c], define PList(L) the collection of all \
+lists such that\n\t\t\t\t\t\t\t\t\t\t\
+Set(\[CapitalLSlash])\[SubsetEqual]Set(L)\nIn addition, \[CapitalLSlash] \
+consists of all the permutations of all sizes 0,1,2,...,|L|.\>\""}], " ", 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+  "PrecursoryComments", " ", "=", " ", 
+   "\"\<For a given set A, by List(A) we mean an ordered set created by A. \
+Example: If A={a,b,c}, then List(A)=[a,b,c] where the order of appearance of \
+the elements does matter. The order of the elements of the output List(A) is \
+the initial order of the input set A. So, List({a,b,c})=[a,b,c] while \
+List({b,a,c})=[b,a,c]. We call the new objects lists.\>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+  "ListDefining", "=", "\[IndentingNewLine]", 
+   "\"\<Let's say for a given list L that L = [a,b,c]. From our definition of \
+a list, this implies that the input set into that list was ordered set \
+{a,b,c}. Now, suppose we wish to extend this definition to lists where the \
+input sets are the null set, a set of sets (subsets composing a set), and \
+power sets.\n\n\!\(\*StyleBox[\"Null\",FontWeight->\"Bold\"]\)\!\(\*StyleBox[\
+\" \",FontWeight->\"Bold\"]\)\!\(\*StyleBox[\"Set\",FontWeight->\"Bold\"]\)\n\
+Suppose that set B in this case is the null set (B={}). Then the list(B) = \
+list({}) = [{}]. \n\n\
+\!\(\*StyleBox[\"System\",FontWeight->\"Bold\"]\)\!\(\*StyleBox[\" \
+\",FontWeight->\"Bold\"]\)\!\(\*StyleBox[\"of\",FontWeight->\"Bold\"]\)\!\(\*\
+StyleBox[\" \
+\",FontWeight->\"Bold\"]\)\!\(\*StyleBox[\"Sets\",FontWeight->\"Bold\"]\)\n\
+Suppose that arbitraily there are the sets:\nA={1,2,3,4}\nB={a,3,4}\nC={2,a}\n\
+D={Vanilla,Strawberry,Chocolate}\n\nLet \[CapitalPsi] be a set composed of \
+the subsets A, B, C, and D such that:\n\n\[CapitalPsi]= {A,B,C,D} = \
+{{1,2,3,4},{a,3,4},{2,a},{Vanilla,Strawberry,Chocolate}}\n\nAccordingly, \
+based on our definition of a list, the list(\[CapitalPsi]} will be:\n\nList(\
+\[CapitalPsi]) = [{1,2,3,4},{a,3,4},{2,a},{Vanilla,Strawberry,Chocolate}]\n\n\
+\!\(\*StyleBox[\"Power\",FontWeight->\"Bold\"]\)\!\(\*StyleBox[\" \
+\",FontWeight->\"Bold\"]\)\!\(\*StyleBox[\"Sets\",FontWeight->\"Bold\"]\)\!\(\
+\*StyleBox[\"(\",FontWeight->\"Bold\"]\)\!\(\*StyleBox[\"using\",FontWeight->\
+\"Bold\"]\)\!\(\*StyleBox[\" \
+\",FontWeight->\"Bold\"]\)\!\(\*StyleBox[\"intiial\",FontWeight->\"Bold\"]\)\!\
+\(\*StyleBox[\" \
+\",FontWeight->\"Bold\"]\)\!\(\*StyleBox[\"segments\",FontWeight->\"Bold\"]\)\
+\!\(\*StyleBox[\")\",FontWeight->\"Bold\"]\)\nLet Z denote the set of \
+integers.\n\nLet Z(n) then denote the initial segment of Z+ such that:\n\n\
+Z+(n) = {1,2,..,n}\n\nLet \[CurlyKappa] = {Z(n): n \[Element] Z+(n)} (the set \
+of all initial segments of Z+(n))\n\nThen:\n\n\[CurlyKappa] = {{1},{1,2},...}\
+\n\nWhich implies that \[CurlyKappa] is a subset of the power set Z. \n\n\
+Since \[CurlyKappa] is a subset of the power set Z, this implies that the \
+list of \[CurlyKappa] would be a subset of the list of the power set of Z.\n\n\
+Now, suppose we want to show using Mathematica the specifc cases for the \
+permutations of all elements. We have this snippet here: \>\""}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"A", " ", "=", " ", 
+   RowBox[{"{", 
+    RowBox[{"a", ",", "b", ",", "c"}], "}"}]}], "  ", 
+  "\[IndentingNewLine]"}], "\n", 
+ RowBox[{
+  RowBox[{
+  "ContinuedComments", " ", "=", " ", 
+   "\"\<Where A is the set A. Referencing the associated submitted pdfs, we \
+have: \>\""}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"D1", " ", "=", " ", 
+   RowBox[{"Subsets", "[", "A", "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{"ChooseNoneComments", " ", "=", " ", 
+  "\"\<If for the three elements we construct an input set where we select \
+none of those elements, we yield: \>\""}], "\[IndentingNewLine]", 
+ RowBox[{"ChooseNone", " ", "=", " ", 
+  RowBox[{"Permutations", "[", 
+   RowBox[{"A", ",", " ", 
+    RowBox[{"{", "0", "}"}]}], 
+   "]"}]}], "\[IndentingNewLine]", "\"\<If for the three elements we \
+construct an input set where we select one of those elements, we yield: \
+\>\"", "\[IndentingNewLine]", 
+ RowBox[{"ChooseOne", " ", "=", " ", 
+  RowBox[{"Permutations", "[", 
+   RowBox[{"A", ",", " ", 
+    RowBox[{"{", "1", "}"}]}], 
+   "]"}]}], "\[IndentingNewLine]", "\"\<If for the three elements we \
+construct an input set where we select two of those elements, we yield: \
+\>\"", "\[IndentingNewLine]", 
+ RowBox[{"ChooseTwo", " ", "=", " ", 
+  RowBox[{"Permutations", "[", 
+   RowBox[{"A", ",", " ", 
+    RowBox[{"{", "2", "}"}]}], 
+   "]"}]}], "\[IndentingNewLine]", "\"\<If for the three elements we \
+construct an input set where we select all of those elements, we yield: \
+\>\"", "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ChooseAll", " ", "=", " ", 
+   RowBox[{"Permutations", "[", 
+    RowBox[{"A", ",", " ", 
+     RowBox[{"{", "3", "}"}]}], "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+  "CommentsPerm", "=", 
+   "\"\<For the permutation list, PList, which is the sum of all of the lists \
+created from these input sets (these lists are subsets of the much larger \
+list which consists of all elements from the input set) we yield:\>\""}], 
+  "\n"}], "\n", 
+ RowBox[{
+  RowBox[{"PList", " ", "=", " ", 
+   RowBox[{"Union", "[", 
+    RowBox[{
+    "ChooseNone", ",", " ", "ChooseOne", ",", " ", "ChooseTwo", ",", " ", 
+     "ChooseAll"}], "]"}]}], "\n"}], "\[IndentingNewLine]", 
+ RowBox[{"GeneralCaseComments", " ", "=", " ", 
+  "\"\<In the general case, we know from previously written proofs (pdf file) \
+that we can define in Mathematica the general case situation by: \>\""}], "\n\
+", 
+ RowBox[{"D1", " ", "=", " ", 
+  RowBox[{"Subsets", "[", "A", "]"}]}], "\n", 
+ RowBox[{"l1", "=", " ", 
+  RowBox[{"Length", "[", "D1", "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"PListA", " ", "=", " ", 
+   RowBox[{"{", "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"For", "[", 
+  RowBox[{
+   RowBox[{"K", " ", "=", " ", "1"}], ",", " ", 
+   RowBox[{"K", "<", " ", 
+    RowBox[{"l1", "+", "1"}]}], ",", " ", 
+   RowBox[{"K", "++"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"B", "=", " ", 
+      RowBox[{"Permutations", "[", 
+       RowBox[{"D1", "[", 
+        RowBox[{"[", "K", "]"}], "]"}], "]"}]}], ",", " ", 
+     RowBox[{"l2", "=", 
+      RowBox[{"Length", "[", "B", "]"}]}], ",", " ", 
+     RowBox[{"For", "[", 
+      RowBox[{
+       RowBox[{"L", "=", "1"}], ",", 
+       RowBox[{"L", "<", 
+        RowBox[{"l2", "+", "1"}]}], ",", " ", 
+       RowBox[{"L", "++"}], ",", " ", 
+       RowBox[{"{", 
+        RowBox[{"PListA", "=", 
+         RowBox[{"Union", "[", 
+          RowBox[{"PListA", ",", 
+           RowBox[{"{", 
+            RowBox[{"B", "[", 
+             RowBox[{"[", "L", "]"}], "]"}], "}"}]}], "]"}]}], "}"}]}], 
+      "]"}]}], "}"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", "PListA", "]"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.8459289473300056`*^9, 3.8459289718221045`*^9}, {
+   3.8459291019664574`*^9, 3.845929149012211*^9}, {3.8459291795116816`*^9, 
+   3.845929245853919*^9}, {3.8459343189546623`*^9, 3.845934534442767*^9}, {
+   3.84593457291535*^9, 3.8459348182119045`*^9}, {3.8459349489475813`*^9, 
+   3.8459352880516467`*^9}, {3.8459353203874893`*^9, 
+   3.8459354433033314`*^9}, {3.8459354881253595`*^9, 3.84593557150415*^9}, {
+   3.845935729360526*^9, 3.845935806177062*^9}, {3.8459359591406775`*^9, 
+   3.8459363507589993`*^9}, {3.845936631799312*^9, 3.845936651084778*^9}, {
+   3.8459369693480225`*^9, 3.845936979805607*^9}, {3.8459370255398197`*^9, 
+   3.845937047039074*^9}, {3.845937244292254*^9, 3.845937299712072*^9}, {
+   3.8459374822504053`*^9, 3.845937523771758*^9}, {3.845938361826516*^9, 
+   3.8459383632147617`*^9}, {3.8459384077936707`*^9, 
+   3.8459384089900208`*^9}, {3.8459387124236917`*^9, 3.845938732000966*^9}, {
+   3.8459387826638727`*^9, 3.845938783170297*^9}, {3.8459389324112625`*^9, 
+   3.8459389852820873`*^9}, {3.8459390462602963`*^9, 3.8459390554486485`*^9}, 
+   3.8459390969299335`*^9, {3.8459391873317003`*^9, 3.8459394238566756`*^9}, {
+   3.8459855564875793`*^9, 3.8459857473482924`*^9}, {3.845985809774721*^9, 
+   3.845985870274516*^9}, {3.8459859086075416`*^9, 3.8459859157701025`*^9}, {
+   3.8459861762850666`*^9, 3.845986277284252*^9}, {3.8459863105224853`*^9, 
+   3.8459863117527514`*^9}, {3.8459863725586634`*^9, 
+   3.8459865388900256`*^9}, {3.847193130749057*^9, 3.847193139413005*^9}, {
+   3.8471931879929037`*^9, 3.847193213641511*^9}, {3.8471932566839294`*^9, 
+   3.8471932696007004`*^9}, {3.847193300044758*^9, 3.8471933330523005`*^9}, {
+   3.84719353901376*^9, 3.847193582162161*^9}, {3.8471936334765797`*^9, 
+   3.8471938003742585`*^9}, {3.8471938793748736`*^9, 
+   3.8471938967225866`*^9}, {3.8471939368283606`*^9, 3.847194007065446*^9}, 
+   3.847194142807773*^9, 3.8471941746258106`*^9, {3.8471942072071342`*^9, 
+   3.8471942087905607`*^9}, 3.847194440429784*^9, {3.847194470659381*^9, 
+   3.847194517017482*^9}, {3.8471947608125267`*^9, 3.8471947890815787`*^9}},
+ CellLabel->
+  "In[272]:=",ExpressionUUID->"be727fee-ab79-4774-8059-a2e3c8c9b3f4"],
+
+Cell[BoxData["\<\"Twymun Safford\"\>"], "Output",
+ CellChangeTimes->{
+  3.847193756290143*^9, 3.8471938027947845`*^9, 3.8471938511425004`*^9, 
+   3.84719389955105*^9, 3.8471939400464525`*^9, 3.847193988203452*^9, 
+   3.8471944477574883`*^9, {3.847194498617238*^9, 3.8471945195534563`*^9}, {
+   3.847194748486791*^9, 3.847194795004627*^9}},
+ CellLabel->
+  "Out[272]=",ExpressionUUID->"d1b8c2aa-6d04-4a51-8f15-6544e50bd388"],
+
+Cell[BoxData["\<\"CPSC 260\"\>"], "Output",
+ CellChangeTimes->{
+  3.847193756290143*^9, 3.8471938027947845`*^9, 3.8471938511425004`*^9, 
+   3.84719389955105*^9, 3.8471939400464525`*^9, 3.847193988203452*^9, 
+   3.8471944477574883`*^9, {3.847194498617238*^9, 3.8471945195534563`*^9}, {
+   3.847194748486791*^9, 3.8471947950106087`*^9}},
+ CellLabel->
+  "Out[273]=",ExpressionUUID->"c774ad36-7281-433f-ac2f-4a510ac22440"],
+
+Cell[BoxData["\<\"Topological Sorting of a Partial Order\"\>"], "Output",
+ CellChangeTimes->{
+  3.847193756290143*^9, 3.8471938027947845`*^9, 3.8471938511425004`*^9, 
+   3.84719389955105*^9, 3.8471939400464525`*^9, 3.847193988203452*^9, 
+   3.8471944477574883`*^9, {3.847194498617238*^9, 3.8471945195534563`*^9}, {
+   3.847194748486791*^9, 3.847194795015597*^9}},
+ CellLabel->
+  "Out[274]=",ExpressionUUID->"3856ec06-7710-4767-ae42-37fa1394168a"],
+
+Cell[BoxData["\<\"For a given list L=[a,b,c], define PList(L) the collection \
+of all lists such that\\n\\t\\t\\t\\t\\t\\t\\t\\t\\t\\tSet(\[CapitalLSlash])\
+\[SubsetEqual]Set(L)\\nIn addition, \[CapitalLSlash] consists of all the \
+permutations of all sizes 0,1,2,...,|L|.\"\>"], "Output",
+ CellChangeTimes->{
+  3.847193756290143*^9, 3.8471938027947845`*^9, 3.8471938511425004`*^9, 
+   3.84719389955105*^9, 3.8471939400464525`*^9, 3.847193988203452*^9, 
+   3.8471944477574883`*^9, {3.847194498617238*^9, 3.8471945195534563`*^9}, {
+   3.847194748486791*^9, 3.847194795025568*^9}},
+ CellLabel->
+  "Out[275]=",ExpressionUUID->"b18cd0c9-da50-46af-94d0-2765316e7ae9"],
+
+Cell[BoxData["\<\"For a given set A, by List(A) we mean an ordered set \
+created by A. Example: If A={a,b,c}, then List(A)=[a,b,c] where the order of \
+appearance of the elements does matter. The order of the elements of the \
+output List(A) is the initial order of the input set A. So, \
+List({a,b,c})=[a,b,c] while List({b,a,c})=[b,a,c]. We call the new objects \
+lists.\"\>"], "Output",
+ CellChangeTimes->{
+  3.847193756290143*^9, 3.8471938027947845`*^9, 3.8471938511425004`*^9, 
+   3.84719389955105*^9, 3.8471939400464525`*^9, 3.847193988203452*^9, 
+   3.8471944477574883`*^9, {3.847194498617238*^9, 3.8471945195534563`*^9}, {
+   3.847194748486791*^9, 3.8471947950305552`*^9}},
+ CellLabel->
+  "Out[276]=",ExpressionUUID->"6ae4518b-c0c6-4f35-b4b1-5ff87e7a5169"],
+
+Cell[BoxData["\<\"Let's say for a given list L that L = [a,b,c]. From our \
+definition of a list, this implies that the input set into that list was \
+ordered set {a,b,c}. Now, suppose we wish to extend this definition to lists \
+where the input sets are the null set, a set of sets (subsets composing a \
+set), and power \
+sets.\\n\\n\\!\\(\\*StyleBox[\\\"Null\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\\
+*StyleBox[\\\" \
+\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\"Set\\\",FontWeight->\\\
+\"Bold\\\"]\\)\\nSuppose that set B in this case is the null set (B={}). Then \
+the list(B) = list({}) = [{}]. \
+\\n\\n\\!\\(\\*StyleBox[\\\"System\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*\
+StyleBox[\\\" \
+\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\"of\\\",FontWeight->\\\"\
+Bold\\\"]\\)\\!\\(\\*StyleBox[\\\" \
+\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\"Sets\\\",FontWeight->\\\
+\"Bold\\\"]\\)\\nSuppose that arbitraily there are the \
+sets:\\nA={1,2,3,4}\\nB={a,3,4}\\nC={2,a}\\nD={Vanilla,Strawberry,Chocolate}\\\
+n\\nLet \[CapitalPsi] be a set composed of the subsets A, B, C, and D such \
+that:\\n\\n\[CapitalPsi]= {A,B,C,D} = \
+{{1,2,3,4},{a,3,4},{2,a},{Vanilla,Strawberry,Chocolate}}\\n\\nAccordingly, \
+based on our definition of a list, the list(\[CapitalPsi]} will \
+be:\\n\\nList(\[CapitalPsi]) = \
+[{1,2,3,4},{a,3,4},{2,a},{Vanilla,Strawberry,Chocolate}]\\n\\n\\!\\(\\*\
+StyleBox[\\\"Power\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\" \
+\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\"Sets\\\",FontWeight->\\\
+\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\"(\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\\
+*StyleBox[\\\"using\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\" \\\
+\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\"intiial\\\",FontWeight->\
+\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\" \
+\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\"segments\\\",\
+FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\")\\\",FontWeight->\\\"Bold\\\
+\"]\\)\\nLet Z denote the set of integers.\\n\\nLet Z(n) then denote the \
+initial segment of Z+ such that:\\n\\nZ+(n) = {1,2,..,n}\\n\\nLet \
+\[CurlyKappa] = {Z(n): n \[Element] Z+(n)} (the set of all initial segments \
+of Z+(n))\\n\\nThen:\\n\\n\[CurlyKappa] = {{1},{1,2},...}\\n\\nWhich implies \
+that \[CurlyKappa] is a subset of the power set Z. \\n\\nSince \[CurlyKappa] \
+is a subset of the power set Z, this implies that the list of \[CurlyKappa] \
+would be a subset of the list of the power set of Z.\\n\\nNow, suppose we \
+want to show using Mathematica the specifc cases for the permutations of all \
+elements. We have this snippet here: \"\>"], "Output",
+ CellChangeTimes->{
+  3.847193756290143*^9, 3.8471938027947845`*^9, 3.8471938511425004`*^9, 
+   3.84719389955105*^9, 3.8471939400464525`*^9, 3.847193988203452*^9, 
+   3.8471944477574883`*^9, {3.847194498617238*^9, 3.8471945195534563`*^9}, {
+   3.847194748486791*^9, 3.847194795037537*^9}},
+ CellLabel->
+  "Out[277]=",ExpressionUUID->"15060d05-8d3f-4294-b5be-9ff1ffbd2e4b"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"a", ",", "b", ",", "c"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.847193756290143*^9, 3.8471938027947845`*^9, 3.8471938511425004`*^9, 
+   3.84719389955105*^9, 3.8471939400464525`*^9, 3.847193988203452*^9, 
+   3.8471944477574883`*^9, {3.847194498617238*^9, 3.8471945195534563`*^9}, {
+   3.847194748486791*^9, 3.847194795045514*^9}},
+ CellLabel->
+  "Out[278]=",ExpressionUUID->"d7bbdff9-46f7-4af0-96eb-0b8269d096c6"],
+
+Cell[BoxData["\<\"Where A is the set A. Referencing the associated submitted \
+pdfs, we have: \"\>"], "Output",
+ CellChangeTimes->{
+  3.847193756290143*^9, 3.8471938027947845`*^9, 3.8471938511425004`*^9, 
+   3.84719389955105*^9, 3.8471939400464525`*^9, 3.847193988203452*^9, 
+   3.8471944477574883`*^9, {3.847194498617238*^9, 3.8471945195534563`*^9}, {
+   3.847194748486791*^9, 3.8471947950534935`*^9}},
+ CellLabel->
+  "Out[279]=",ExpressionUUID->"3b664dd7-6e9a-440a-9174-aa8372359182"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", "}"}], ",", 
+   RowBox[{"{", "a", "}"}], ",", 
+   RowBox[{"{", "b", "}"}], ",", 
+   RowBox[{"{", "c", "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"a", ",", "b"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"a", ",", "c"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"b", ",", "c"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"a", ",", "b", ",", "c"}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.847193756290143*^9, 3.8471938027947845`*^9, 3.8471938511425004`*^9, 
+   3.84719389955105*^9, 3.8471939400464525`*^9, 3.847193988203452*^9, 
+   3.8471944477574883`*^9, {3.847194498617238*^9, 3.8471945195534563`*^9}, {
+   3.847194748486791*^9, 3.847194795059511*^9}},
+ CellLabel->
+  "Out[280]=",ExpressionUUID->"d20c69c4-9b04-4857-a586-b78f3e642c31"],
+
+Cell[BoxData["\<\"If for the three elements we construct an input set where \
+we select none of those elements, we yield: \"\>"], "Output",
+ CellChangeTimes->{
+  3.847193756290143*^9, 3.8471938027947845`*^9, 3.8471938511425004`*^9, 
+   3.84719389955105*^9, 3.8471939400464525`*^9, 3.847193988203452*^9, 
+   3.8471944477574883`*^9, {3.847194498617238*^9, 3.8471945195534563`*^9}, {
+   3.847194748486791*^9, 3.8471947950644646`*^9}},
+ CellLabel->
+  "Out[281]=",ExpressionUUID->"f0ad6146-30df-4e46-9379-1ea1f2162f73"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"{", "}"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.847193756290143*^9, 3.8471938027947845`*^9, 3.8471938511425004`*^9, 
+   3.84719389955105*^9, 3.8471939400464525`*^9, 3.847193988203452*^9, 
+   3.8471944477574883`*^9, {3.847194498617238*^9, 3.8471945195534563`*^9}, {
+   3.847194748486791*^9, 3.8471947950734396`*^9}},
+ CellLabel->
+  "Out[282]=",ExpressionUUID->"e2bca837-8130-44bf-8ba3-dbef3a1973f0"],
+
+Cell[BoxData["\<\"If for the three elements we construct an input set where \
+we select one of those elements, we yield: \"\>"], "Output",
+ CellChangeTimes->{
+  3.847193756290143*^9, 3.8471938027947845`*^9, 3.8471938511425004`*^9, 
+   3.84719389955105*^9, 3.8471939400464525`*^9, 3.847193988203452*^9, 
+   3.8471944477574883`*^9, {3.847194498617238*^9, 3.8471945195534563`*^9}, {
+   3.847194748486791*^9, 3.8471947950774293`*^9}},
+ CellLabel->
+  "Out[283]=",ExpressionUUID->"464fa6b3-eeff-40f5-9fd1-dcd837abe072"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", "a", "}"}], ",", 
+   RowBox[{"{", "b", "}"}], ",", 
+   RowBox[{"{", "c", "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.847193756290143*^9, 3.8471938027947845`*^9, 3.8471938511425004`*^9, 
+   3.84719389955105*^9, 3.8471939400464525`*^9, 3.847193988203452*^9, 
+   3.8471944477574883`*^9, {3.847194498617238*^9, 3.8471945195534563`*^9}, {
+   3.847194748486791*^9, 3.847194795083413*^9}},
+ CellLabel->
+  "Out[284]=",ExpressionUUID->"1d5b0146-b832-456d-beab-b1fd20786523"],
+
+Cell[BoxData["\<\"If for the three elements we construct an input set where \
+we select two of those elements, we yield: \"\>"], "Output",
+ CellChangeTimes->{
+  3.847193756290143*^9, 3.8471938027947845`*^9, 3.8471938511425004`*^9, 
+   3.84719389955105*^9, 3.8471939400464525`*^9, 3.847193988203452*^9, 
+   3.8471944477574883`*^9, {3.847194498617238*^9, 3.8471945195534563`*^9}, {
+   3.847194748486791*^9, 3.8471947950884085`*^9}},
+ CellLabel->
+  "Out[285]=",ExpressionUUID->"346f90cd-fe62-468d-a74d-77c4bde54166"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"a", ",", "b"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"a", ",", "c"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"b", ",", "a"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"b", ",", "c"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"c", ",", "a"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"c", ",", "b"}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.847193756290143*^9, 3.8471938027947845`*^9, 3.8471938511425004`*^9, 
+   3.84719389955105*^9, 3.8471939400464525`*^9, 3.847193988203452*^9, 
+   3.8471944477574883`*^9, {3.847194498617238*^9, 3.8471945195534563`*^9}, {
+   3.847194748486791*^9, 3.847194795094386*^9}},
+ CellLabel->
+  "Out[286]=",ExpressionUUID->"6c38d53f-ab91-492e-b9e0-0ade08e2468c"],
+
+Cell[BoxData["\<\"If for the three elements we construct an input set where \
+we select all of those elements, we yield: \"\>"], "Output",
+ CellChangeTimes->{
+  3.847193756290143*^9, 3.8471938027947845`*^9, 3.8471938511425004`*^9, 
+   3.84719389955105*^9, 3.8471939400464525`*^9, 3.847193988203452*^9, 
+   3.8471944477574883`*^9, {3.847194498617238*^9, 3.8471945195534563`*^9}, {
+   3.847194748486791*^9, 3.847194795100368*^9}},
+ CellLabel->
+  "Out[287]=",ExpressionUUID->"24c3c197-b992-4d56-a797-ef6551cf92f2"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"a", ",", "b", ",", "c"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"a", ",", "c", ",", "b"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"b", ",", "a", ",", "c"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"b", ",", "c", ",", "a"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"c", ",", "a", ",", "b"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"c", ",", "b", ",", "a"}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.847193756290143*^9, 3.8471938027947845`*^9, 3.8471938511425004`*^9, 
+   3.84719389955105*^9, 3.8471939400464525`*^9, 3.847193988203452*^9, 
+   3.8471944477574883`*^9, {3.847194498617238*^9, 3.8471945195534563`*^9}, {
+   3.847194748486791*^9, 3.8471947951083727`*^9}},
+ CellLabel->
+  "Out[288]=",ExpressionUUID->"c0651061-ee73-4bba-a493-81c5fdfa15d9"],
+
+Cell[BoxData["\<\"For the permutation list, PList, which is the sum of all of \
+the lists created from these input sets (these lists are subsets of the much \
+larger list which consists of all elements from the input set) we \
+yield:\"\>"], "Output",
+ CellChangeTimes->{
+  3.847193756290143*^9, 3.8471938027947845`*^9, 3.8471938511425004`*^9, 
+   3.84719389955105*^9, 3.8471939400464525`*^9, 3.847193988203452*^9, 
+   3.8471944477574883`*^9, {3.847194498617238*^9, 3.8471945195534563`*^9}, {
+   3.847194748486791*^9, 3.8471947951133356`*^9}},
+ CellLabel->
+  "Out[289]=",ExpressionUUID->"0cdc8a56-3f70-4e40-8308-dcf86413d629"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", "}"}], ",", 
+   RowBox[{"{", "a", "}"}], ",", 
+   RowBox[{"{", "b", "}"}], ",", 
+   RowBox[{"{", "c", "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"a", ",", "b"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"a", ",", "c"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"b", ",", "a"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"b", ",", "c"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"c", ",", "a"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"c", ",", "b"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"a", ",", "b", ",", "c"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"a", ",", "c", ",", "b"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"b", ",", "a", ",", "c"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"b", ",", "c", ",", "a"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"c", ",", "a", ",", "b"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"c", ",", "b", ",", "a"}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.847193756290143*^9, 3.8471938027947845`*^9, 3.8471938511425004`*^9, 
+   3.84719389955105*^9, 3.8471939400464525`*^9, 3.847193988203452*^9, 
+   3.8471944477574883`*^9, {3.847194498617238*^9, 3.8471945195534563`*^9}, {
+   3.847194748486791*^9, 3.847194795121313*^9}},
+ CellLabel->
+  "Out[290]=",ExpressionUUID->"d8b5745a-f6e3-49fd-bd56-4213ddd46236"],
+
+Cell[BoxData["\<\"In the general case, we know from previously written proofs \
+(pdf file) that we can define in Mathematica the general case situation by: \
+\"\>"], "Output",
+ CellChangeTimes->{
+  3.847193756290143*^9, 3.8471938027947845`*^9, 3.8471938511425004`*^9, 
+   3.84719389955105*^9, 3.8471939400464525`*^9, 3.847193988203452*^9, 
+   3.8471944477574883`*^9, {3.847194498617238*^9, 3.8471945195534563`*^9}, {
+   3.847194748486791*^9, 3.847194795126299*^9}},
+ CellLabel->
+  "Out[291]=",ExpressionUUID->"29b04f06-1617-4e1a-9ba0-cc83a413a454"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", "}"}], ",", 
+   RowBox[{"{", "a", "}"}], ",", 
+   RowBox[{"{", "b", "}"}], ",", 
+   RowBox[{"{", "c", "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"a", ",", "b"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"a", ",", "c"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"b", ",", "c"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"a", ",", "b", ",", "c"}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.847193756290143*^9, 3.8471938027947845`*^9, 3.8471938511425004`*^9, 
+   3.84719389955105*^9, 3.8471939400464525`*^9, 3.847193988203452*^9, 
+   3.8471944477574883`*^9, {3.847194498617238*^9, 3.8471945195534563`*^9}, {
+   3.847194748486791*^9, 3.8471947951322827`*^9}},
+ CellLabel->
+  "Out[292]=",ExpressionUUID->"35eb6098-0896-462e-9f5e-8a5a7e8c63e7"],
+
+Cell[BoxData["8"], "Output",
+ CellChangeTimes->{
+  3.847193756290143*^9, 3.8471938027947845`*^9, 3.8471938511425004`*^9, 
+   3.84719389955105*^9, 3.8471939400464525`*^9, 3.847193988203452*^9, 
+   3.8471944477574883`*^9, {3.847194498617238*^9, 3.8471945195534563`*^9}, {
+   3.847194748486791*^9, 3.847194795138267*^9}},
+ CellLabel->
+  "Out[293]=",ExpressionUUID->"d87eeb70-daa1-48f9-b9e4-52994e227fdb"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", "}"}], ",", 
+   RowBox[{"{", "a", "}"}], ",", 
+   RowBox[{"{", "b", "}"}], ",", 
+   RowBox[{"{", "c", "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"a", ",", "b"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"a", ",", "c"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"b", ",", "a"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"b", ",", "c"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"c", ",", "a"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"c", ",", "b"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"a", ",", "b", ",", "c"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"a", ",", "c", ",", "b"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"b", ",", "a", ",", "c"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"b", ",", "c", ",", "a"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"c", ",", "a", ",", "b"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"c", ",", "b", ",", "a"}], "}"}]}], "}"}]], "Print",
+ CellChangeTimes->{{3.8471947672344265`*^9, 3.8471947951452484`*^9}},
+ CellLabel->
+  "During evaluation of \
+In[272]:=",ExpressionUUID->"fc0dd5bb-f696-4aa8-a06d-3964a0e412e6"]
+}, Open  ]],
+
+Cell[BoxData["\[IndentingNewLine]"], "Input",
+ CellChangeTimes->{
+  3.845939473393571*^9},ExpressionUUID->"a8ffbd82-c854-4b29-9538-\
+32b4b61011ef"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["\"\<Let's say for a given list L that L = [a,b,c]. From our \
+definition of a list, this implies that the input set into that list was \
+ordered set {a,b,c}. Now, suppose we wish to extend this definition to lists \
+where the input sets are the null set, a set of sets (subsets composing a \
+set), and power \
+sets.\\n\\n\\!\\(\\*StyleBox[\\\"Null\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\\
+*StyleBox[\\\" \
+\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\"Set\\\",FontWeight->\\\
+\"Bold\\\"]\\)\\nSuppose that set B in this case is the null set (B={}). Then \
+the list(B) = list({}) = [{}]. \
+\\n\\n\\!\\(\\*StyleBox[\\\"System\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*\
+StyleBox[\\\" \
+\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\"of\\\",FontWeight->\\\"\
+Bold\\\"]\\)\\!\\(\\*StyleBox[\\\" \
+\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\"Sets\\\",FontWeight->\\\
+\"Bold\\\"]\\)\\nSuppose that arbitraily there are the \
+sets:\\nA={1,2,3,4}\\nB={a,3,4}\\nC={2,a}\\nD={Vanilla,Strawberry,Chocolate}\\\
+n\\nLet \[CapitalPsi] be a set composed of the subsets A, B, C, and D such \
+that:\\n\\n\[CapitalPsi]= {A,B,C,D} = \
+{{1,2,3,4},{a,3,4},{2,a},{Vanilla,Strawberry,Chocolate}}\\n\\nAccordingly, \
+based on our definition of a list, the list(\[CapitalPsi]} will \
+be:\\n\\nList(\[CapitalPsi]) = \
+[{1,2,3,4},{a,3,4},{2,a},{Vanilla,Strawberry,Chocolate}]\\n\\n\\!\\(\\*\
+StyleBox[\\\"Power\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\" \
+\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\"Sets\\\",FontWeight->\\\
+\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\"(\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\\
+*StyleBox[\\\"using\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\" \\\
+\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\"intiial\\\",FontWeight->\
+\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\" \
+\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\"segments\\\",\
+FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\")\\\",FontWeight->\\\"Bold\\\
+\"]\\)\\nLet Z denote the set of integers.\\n\\nLet Z(n) then denote the \
+initial segment of Z+ such that:\\n\\nZ+(n) = {1,2,..,n}\\n\\nLet \
+\[CurlyKappa] = {Z(n): n \[Element] Z+(n)} (the set of all initial segments \
+of Z+(n))\\n\\nThen:\\n\\n\[CurlyKappa] = {{1},{1,2},...}\\n\\nWhich implies \
+that \[CurlyKappa] is a subset of the power set Z. \\n\\nSince \[CurlyKappa] \
+is a subset of the power set Z, this implies that the list of \[CurlyKappa] \
+would be a subset of the list of the power set of Z.\\n\\nNow, suppose we \
+want to show using Mathematica the specifc cases for the permutations of all \
+elements. We have this snippet here: \>\""], "Input",
+ CellChangeTimes->{3.845937877714707*^9},
+ CellLabel->
+  "In[545]:=",ExpressionUUID->"1dda53aa-0f1d-4b6a-88b1-1a916de08dc5"],
+
+Cell[BoxData["\<\"Let's say for a given list L that L = [a,b,c]. From our \
+definition of a list, this implies that the input set into that list was \
+ordered set {a,b,c}. Now, suppose we wish to extend this definition to lists \
+where the input sets are the null set, a set of sets (subsets composing a \
+set), and power \
+sets.\\n\\n\\!\\(\\*StyleBox[\\\"Null\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\\
+*StyleBox[\\\" \
+\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\"Set\\\",FontWeight->\\\
+\"Bold\\\"]\\)\\nSuppose that set B in this case is the null set (B={}). Then \
+the list(B) = list({}) = [{}]. \
+\\n\\n\\!\\(\\*StyleBox[\\\"System\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*\
+StyleBox[\\\" \
+\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\"of\\\",FontWeight->\\\"\
+Bold\\\"]\\)\\!\\(\\*StyleBox[\\\" \
+\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\"Sets\\\",FontWeight->\\\
+\"Bold\\\"]\\)\\nSuppose that arbitraily there are the \
+sets:\\nA={1,2,3,4}\\nB={a,3,4}\\nC={2,a}\\nD={Vanilla,Strawberry,Chocolate}\\\
+n\\nLet \[CapitalPsi] be a set composed of the subsets A, B, C, and D such \
+that:\\n\\n\[CapitalPsi]= {A,B,C,D} = \
+{{1,2,3,4},{a,3,4},{2,a},{Vanilla,Strawberry,Chocolate}}\\n\\nAccordingly, \
+based on our definition of a list, the list(\[CapitalPsi]} will \
+be:\\n\\nList(\[CapitalPsi]) = \
+[{1,2,3,4},{a,3,4},{2,a},{Vanilla,Strawberry,Chocolate}]\\n\\n\\!\\(\\*\
+StyleBox[\\\"Power\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\" \
+\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\"Sets\\\",FontWeight->\\\
+\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\"(\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\\
+*StyleBox[\\\"using\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\" \\\
+\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\"intiial\\\",FontWeight->\
+\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\" \
+\\\",FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\"segments\\\",\
+FontWeight->\\\"Bold\\\"]\\)\\!\\(\\*StyleBox[\\\")\\\",FontWeight->\\\"Bold\\\
+\"]\\)\\nLet Z denote the set of integers.\\n\\nLet Z(n) then denote the \
+initial segment of Z+ such that:\\n\\nZ+(n) = {1,2,..,n}\\n\\nLet \
+\[CurlyKappa] = {Z(n): n \[Element] Z+(n)} (the set of all initial segments \
+of Z+(n))\\n\\nThen:\\n\\n\[CurlyKappa] = {{1},{1,2},...}\\n\\nWhich implies \
+that \[CurlyKappa] is a subset of the power set Z. \\n\\nSince \[CurlyKappa] \
+is a subset of the power set Z, this implies that the list of \[CurlyKappa] \
+would be a subset of the list of the power set of Z.\\n\\nNow, suppose we \
+want to show using Mathematica the specifc cases for the permutations of all \
+elements. We have this snippet here: \"\>"], "Output",
+ CellChangeTimes->{
+  3.8459373018648877`*^9, {3.84593748944452*^9, 3.8459375114359293`*^9}, 
+   3.845937888135929*^9},
+ CellLabel->
+  "Out[545]=",ExpressionUUID->"8e774dd4-df28-4271-8586-7d5fce1f719a"]
+}, Open  ]],
+
+Cell[BoxData["\"\<Twymun Safford\>\""], "Input",
+ CellChangeTimes->{3.8459369852877703`*^9},
+ CellLabel->
+  "In[394]:=",ExpressionUUID->"441c9478-77f4-4592-acf9-79b6ea212eb8"],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.845939027853444*^9, 
+  3.845939027853444*^9}},ExpressionUUID->"463e46eb-3a3c-4d9c-ac0f-\
+8602982717a7"],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{
+  3.8459341368040524`*^9, {3.845939025685397*^9, 
+   3.845939030001994*^9}},ExpressionUUID->"4af42257-9f10-484c-b6ba-\
+4a4f4d97c084"],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.845939022089446*^9, 
+  3.845939022089446*^9}},ExpressionUUID->"3373605f-a770-43bf-b272-\
+50127df8705f"],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.8459339837209005`*^9, 3.8459339837209005`*^9}, {
+  3.8459340199868784`*^9, 
+  3.8459341876887293`*^9}},ExpressionUUID->"8116d7ad-e66c-4c2f-90dc-\
+bc120a0968da"],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.8459291848790293`*^9, 
+  3.845929185823906*^9}},ExpressionUUID->"666b647c-6da8-4a6f-a33a-\
+5dcba35046b0"]
+},
+WindowSize->{958, 988},
+WindowMargins->{{Automatic, -7}, {Automatic, 0}},
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (July 9, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"c8a6c2bb-3146-412f-8c29-ee849d904594"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 9677, 189, 1810, "Input",ExpressionUUID->"be727fee-ab79-4774-8059-a2e3c8c9b3f4"],
+Cell[10260, 213, 422, 7, 33, "Output",ExpressionUUID->"d1b8c2aa-6d04-4a51-8f15-6544e50bd388"],
+Cell[10685, 222, 418, 7, 33, "Output",ExpressionUUID->"c774ad36-7281-433f-ac2f-4a510ac22440"],
+Cell[11106, 231, 446, 7, 33, "Output",ExpressionUUID->"3856ec06-7710-4767-ae42-37fa1394168a"],
+Cell[11555, 240, 662, 10, 74, "Output",ExpressionUUID->"b18cd0c9-da50-46af-94d0-2765316e7ae9"],
+Cell[12220, 252, 764, 12, 74, "Output",ExpressionUUID->"6ae4518b-c0c6-4f35-b4b1-5ff87e7a5169"],
+Cell[12987, 266, 3031, 46, 854, "Output",ExpressionUUID->"15060d05-8d3f-4294-b5be-9ff1ffbd2e4b"],
+Cell[16021, 314, 456, 9, 33, "Output",ExpressionUUID->"d7bbdff9-46f7-4af0-96eb-0b8269d096c6"],
+Cell[16480, 325, 486, 8, 33, "Output",ExpressionUUID->"3b664dd7-6e9a-440a-9174-aa8372359182"],
+Cell[16969, 335, 803, 21, 33, "Output",ExpressionUUID->"d20c69c4-9b04-4857-a586-b78f3e642c31"],
+Cell[17775, 358, 514, 8, 33, "Output",ExpressionUUID->"f0ad6146-30df-4e46-9379-1ea1f2162f73"],
+Cell[18292, 368, 443, 9, 33, "Output",ExpressionUUID->"e2bca837-8130-44bf-8ba3-dbef3a1973f0"],
+Cell[18738, 379, 513, 8, 33, "Output",ExpressionUUID->"464fa6b3-eeff-40f5-9fd1-dcd837abe072"],
+Cell[19254, 389, 528, 12, 33, "Output",ExpressionUUID->"1d5b0146-b832-456d-beab-b1fd20786523"],
+Cell[19785, 403, 513, 8, 33, "Output",ExpressionUUID->"346f90cd-fe62-468d-a74d-77c4bde54166"],
+Cell[20301, 413, 780, 21, 33, "Output",ExpressionUUID->"6c38d53f-ab91-492e-b9e0-0ade08e2468c"],
+Cell[21084, 436, 511, 8, 33, "Output",ExpressionUUID->"24c3c197-b992-4d56-a797-ef6551cf92f2"],
+Cell[21598, 446, 842, 21, 33, "Output",ExpressionUUID->"c0651061-ee73-4bba-a493-81c5fdfa15d9"],
+Cell[22443, 469, 625, 10, 54, "Output",ExpressionUUID->"0cdc8a56-3f70-4e40-8308-dcf86413d629"],
+Cell[23071, 481, 1325, 37, 54, "Output",ExpressionUUID->"d8b5745a-f6e3-49fd-bd56-4213ddd46236"],
+Cell[24399, 520, 548, 9, 54, "Output",ExpressionUUID->"29b04f06-1617-4e1a-9ba0-cc83a413a454"],
+Cell[24950, 531, 805, 21, 33, "Output",ExpressionUUID->"35eb6098-0896-462e-9f5e-8a5a7e8c63e7"],
+Cell[25758, 554, 401, 7, 33, "Output",ExpressionUUID->"d87eeb70-daa1-48f9-b9e4-52994e227fdb"],
+Cell[26162, 563, 1127, 34, 23, "Print",ExpressionUUID->"fc0dd5bb-f696-4aa8-a06d-3964a0e412e6"]
+}, Open  ]],
+Cell[27304, 600, 147, 3, 50, "Input",ExpressionUUID->"a8ffbd82-c854-4b29-9538-32b4b61011ef"],
+Cell[CellGroupData[{
+Cell[27476, 607, 2782, 42, 510, "Input",ExpressionUUID->"1dda53aa-0f1d-4b6a-88b1-1a916de08dc5"],
+Cell[30261, 651, 2861, 44, 854, "Output",ExpressionUUID->"8e774dd4-df28-4271-8586-7d5fce1f719a"]
+}, Open  ]],
+Cell[33137, 698, 175, 3, 29, "Input",ExpressionUUID->"441c9478-77f4-4592-acf9-79b6ea212eb8"],
+Cell[33315, 703, 152, 3, 29, "Input",ExpressionUUID->"463e46eb-3a3c-4d9c-ac0f-8602982717a7"],
+Cell[33470, 708, 180, 4, 29, "Input",ExpressionUUID->"4af42257-9f10-484c-b6ba-4a4f4d97c084"],
+Cell[33653, 714, 152, 3, 29, "Input",ExpressionUUID->"3373605f-a770-43bf-b272-50127df8705f"],
+Cell[33808, 719, 209, 4, 29, "Input",ExpressionUUID->"8116d7ad-e66c-4c2f-90dc-bc120a0968da"],
+Cell[34020, 725, 154, 3, 29, "Input",ExpressionUUID->"666b647c-6da8-4a6f-a33a-5dcba35046b0"]
+}
+]
+*)
+
